@@ -1,9 +1,9 @@
 package uz.coder.notesapp.screen
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -29,22 +29,23 @@ import uz.coder.notesapp.models.Notes
 import uz.coder.notesapp.sealed.NotesScreens
 import uz.coder.notesapp.viewModel.NotesViewModel
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun HomeScreen(navigation:NavController?=null,viewModel:NotesViewModel){
     val list = remember { viewModel.getList() }
-    Scaffold(floatingActionButton = { FAB(navigation) }, content = { RecycleView(list,navigation) })
+    Scaffold(floatingActionButton = { FAB(navigation)}) {paddingValues ->
+        RecycleView(list,navigation,paddingValues)
+    }
 }
 @Composable
-fun FAB (navigation: NavController?){
+private fun FAB (navigation: NavController?){
     FloatingActionButton(onClick = {navigation?.navigate(NotesScreens.Add.route)}){
         Icon(imageVector = Icons.Default.Add,contentDescription = null)
     }
 }
 
 @Composable
-private fun RecycleView(list: List<Notes>,navigation: NavController?) {
-    LazyColumn(modifier = Modifier.fillMaxSize()) { items(items = list){
+private fun RecycleView(list: List<Notes>,navigation: NavController?,paddingValues: PaddingValues) {
+    LazyColumn(modifier = Modifier.fillMaxSize().padding(paddingValues)) { items(items = list){
         ItemNotes(it,navigation)
     } }
 }
